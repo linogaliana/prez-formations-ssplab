@@ -97,7 +97,6 @@ css: custom.css
 1. Données de caisse: classification automatique ; 
 2. Données de caisse: appariement à un référentiel de produits ; 
 3. Le projet RESIL: appariement à un référentiel de personnes ; 
-4. Le projet GAIA: géolocalisation dans un référentiel d'adresses.
 
 
 # Données de caisse
@@ -221,3 +220,102 @@ Besoin d'un algorithme de classification pour pallier l'incomplétude du référ
     + Prédictions correctes ≈ 98 % du CA ✅
 
 
+# Appariements à des données de caisse
+
+## Problématique
+
+Enrichissement de données de caisse avec plusieurs sources d'information
+à l'aide de [__méthodes avancées d'appariement flou__]{.blue2}
+:: :
+
+- Utiliser à la fois [l'approche du moteur de recherche]{.orange} (`ElasticSearch`) et les [embeddings]{.orange} pour associer les paires.
+- Procédure visant à minimiser les [faux positifs]{.orange}.
+
+::: {.callout-note}
+Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/abs/10.1145/3524458.3547244)
+:::
+
+
+# Sources
+
+## Données de scanner ([`Relevanc`](https://www.groupe-casino.fr/en/group/activities/e-commerce-new-business-activities/relevanc/) données) {.smaller}
+
+- [__Groupe Casino__]{.orange} (>10% du marché français):
+    - Environ [11 000]{.orange} supermarchés ;
+    - Environ [250 000]{.orange} produits différents ;
+    - Les revenus des supermarchés et les niveaux de cartes de fidélité sont tous deux élevés. <br><br>
+
+- Pas les mêmes données que celles de l'IPC !
+
+:::{.callout-tip}
+
+- Besoin d'être enrichi pour l'analyse :
+    - [Géocodage des supermarchés]{.moyen} ;
+    - [__Obtention des caractéristiques des produits__]{.green2}.
+
+:::
+
+## Données nutritionnelles crowdsourcées ([`Open Food Facts`](https://fr.openfoodfacts.org/)) 
+
+- Environ [2 millions de produits]{.orange} (mise à jour continue)
+
+. . .
+
+| Type d'information | Exemples |
+|------------|-------------|
+| Indices de qualité agrégés | `Nutriscore`, score `NOVA`, `Ecoscore`... |
+| Informations nutritionnelles | Énergie, glucides, matières grasses... |
+| Informations sur le produit | Emballage, volume... |
+
+## Importance du _preprocessing_ 1/2 {.smaller}
+
+1. [Réduire le bruit]{.orange} dans le jeu de données ;
+1. [Harmoniser]{.orange} différentes sources ;
+1. [Identifier les produits non alimentaires]{.orange} malgré le filtrage des catégories.
+
+::: {layout-ncol=2}
+![Données de scanner (`RelevanC`)](img/wordcloud_relevanc_start.png)
+
+
+
+![Données nutritionnelles crowdsourcées (`Open Food Facts`)](img/wordcloud_openfood_start.png)
+:::
+
+## Importance du _preprocessing_ 2/2 {.smaller}
+
+<input type="checkbox" checked> [Réduire le bruit]{.orange} dans le jeu de données ;  </input><br>
+<input type="checkbox" checked> [Harmoniser]{.orange} différentes sources ;  </input><br>
+<input type="checkbox" checked> [Identifier les produits non alimentaires]{.orange} malgré le filtrage des catégories.</input>
+
+::: {layout-ncol=2}
+![Données de scanner (`RelevanC`)](img/wordcloud_relevanc_clean.png)
+
+![Données nutritionnelles crowdsourcées (`Open Food Facts`)](img/wordcloud_openfood_clean.png)
+:::
+
+
+# L'enjeu de l'appariement flou
+
+- Problème des appariements flous par distance textuelle: les synonymes
+    - Beaucoup d'alcools (Ricard & Pastis...)
+- Un dictionnaire de conversion construit en scrapant _Wikipedia_
+- Mais pour aller plus loin, besoin d'un modèle de reconnaissance des synonymes
+    - Entraînement par la technique des réseaux de neurones siamois
+
+![Siamese Neural Network](img/siamese_animal.png)
+
+
+# Deux approches complémentaires pour les appariements flous
+
+- Construction d'un algorithme d'appariement en 5 étapes :
+    - Du plus fiable (appariement EAN) au moins fiable (appariement flou sur des catégories génériques depuis base CIQUAL)
+    - Validation/rejet par un _mix_ distances textuelles et sémantiques
+
+![](img/header_relevanc.png)
+
+# Résultats sur les enrichissements
+
+- Environ 90% des magasins géolocalisés et identifiés par SIRET
+- Environ 98% des produits enrichis avec des caractéristiques grâce à OpenFoodFacts ou CIQUAL
+    - Près de la moitié par appariements flous
+- Plus d'infos sur l'enrichissement des produits dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/abs/10.1145/3524458.3547244)
