@@ -1,7 +1,8 @@
 ---
-title: "Statistique publique et _big data_: quelques applications"
+title: "Statistique publique et _big data_"
 subtitle: |
-  **[2024-05-10]{.orange}**
+  Quelques applications
+date: "14-05-2024"
 author:
     - name: "**[[Lino Galiana](https://www.linogaliana.fr/)]{.blue2}**"
       email: lino.galiana@insee.fr
@@ -29,10 +30,194 @@ from: markdown+emoji
 css: custom.css
 ---
 
+# Introduction
+
+## Contexte
+
+- Baisse du coût de stockage et du coût du traitement ; 
+
+. . .
+
+- Coûts fixes importants mais coûts marginaux nuls:
+    + Intérêt à accumuler la donnée ;
+
+. . .
+
+- Collecte en temps réel et processus évolutif (NoSQL)
+
+::: {.callout-warning}
+[_"Big data is dead"_](https://motherduck.com/blog/big-data-is-dead/): la valeur de la donnée _big data_ est très liée à sa fraicheur
+:::
+
+
+
+## Big data et statistique publique
+
+<h3>Avantages</h3>
+
+- Haute fréquence temporelle
+
+. . .
+
+- Finesse géographique
+
+. . .
+
+- Automatisation de la collecte permet une exhaustivité
+
+
+
+## Big data et statistique publique
+
+<h3>Défis</h3>
+
+- Donnée transactionnelle
+    + Pas construite pour la statistique publique
+
+. . .
+
+- Continuité, au niveau de l’unité statistique, ne va pas de soi
+
+. . .
+
+- Beaucoup de similarité avec données administratives:
+    + Différence principale: la population cible n'est pas connue
+
+
+## Quelques exemples de _big data_ dans la stat publique
+
+- [Système national des données de santé (SNDS)](https://www.snds.gouv.fr/SNDS/Accueil) ;
+- [Déclaration sociale nominative (DSN)](https://entreprendre.service-public.fr/vosdroits/F34059#:~:text=De%20quoi%20s%27agit%2Dil,partir%20du%20logiciel%20de%20paie.) ;
+- [SIVIC](https://esante.gouv.fr/SI-VIC) et [SIDEP](https://www.cnil.fr/fr/cnil-direct/question/passe-sanitaire-sidep-cest-quoi)
+- [Données de caisse](https://www.insee.fr/fr/metadonnees/definition/c2159)
+- ...
+
 # Plan
 
-1. Données de caisse
-2. RelevanC
-3. RESIL
-4. GAIA
+1. Données de caisse: classification automatique ; 
+2. Données de caisse: appariement à un référentiel de produits ; 
+3. Le projet RESIL: appariement à un référentiel de personnes ; 
+4. Le projet GAIA: géolocalisation dans un référentiel d'adresses.
+
+
+# Données de caisse
+
+## Contexte
+
+<br>
+
+- __Depuis 2020__
+    + 🛒 Utilisation des [données de caisses](https://www.insee.fr/fr/metadonnees/definition/c2159) dans le calcul de [l’IPC](https://www.insee.fr/fr/metadonnees/source/indicateur/p1653/description) (contexte: [Leclair, 2019](https://www.insee.fr/fr/information/4254225?sommaire=4254170))
+
+. . .
+
+- __Contenu des données__ 📦
+    + Brève description du produit
+    + Prix & Quantités vendues => Chiffre d'affaires
+    + [Code EAN](https://fr.wikipedia.org/wiki/Code-barres_EAN)
+
+## Exemple fictif des données utilisées
+
+<br>
+
+| Description   | EAN | CA (€)         | Enseigne | Date |
+|------------------|----------|--------------|----------|------------|
+| Lait demi-écrémé | 67890123 |   1500         | ÉcoShop | 15-01-23 |
+| Pain complet     | 43210123 |   12000        | PrixMini | 18-02-23 |
+
+## Avantages des données de caisses
+
+<br>
+
+- __(Quasi-)Exhaustivité__ 📚
+    + Couverture importante du marché de la grande distribution
+  
+. . .
+
+- __Précision__ 🎯
+    + Amélioration des indices existants
+
+. . . 
+
+- __Innovations potentielles__ 📈 
+    + Indices régionaux
+    + Comparaisons spatiales des prix
+
+## La Coicop
+
+<br>
+
+- Pour la __production__ de l'IPC, les articles doivent être classés dans la [nomenclature Coicop](https://www.insee.fr/fr/information/2402696)
+
+![](img/exemple_poste.png)
+
+
+## Problème
+
+Besoin d'un algorithme de classification pour pallier l'incomplétude du référentiel
+
+![](img/graph_ddc.png)
+
+## `FastText`
+
+<br>
+
+- Librairie fréquemment utilisée dans les projets de codification automatique de l’Insee ;
+
+. . . 
+
+- Développée par Meta, [_open source_](https://fasttext.cc/)
+
+. . .
+
+- Ligne de commande et API `Python`
+
+## Avantages 🥇
+
+<br>
+
+* Faible utilisation des ressources ;
+
+. . .
+
+* Rapidité d'entraînement ;
+
+. . .
+
+* Bonnes performances en classification supervisée ;
+
+. . .
+
+* Peu exigeante en termes d'infrastructure ;
+
+. . .
+
+* Fournit une métrique de confiance pour chaque prédiction
+
+## Inconvénients 😨
+
+<br>
+
+* Peu maintenue ;
+
+. . .
+
+* Documentation perfectible ;
+
+. . .
+
+* Réentrainement _from scratch_ à chaque projet ;
+
+
+## Performance
+
+- Entraînement et tests sur des enseignes représentant environ 20% des données étiquetées ;
+
+- [Précision/rappel](https://fr.wikipedia.org/wiki/Pr%C3%A9cision_et_rappel) équivalents ≈ 97 % ;
+
+. . .
+
+- Un peu meilleur sur les produits de grande consommation
+    + Prédictions correctes ≈ 98 % du CA ✅
+
 
