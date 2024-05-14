@@ -224,6 +224,16 @@ Besoin d'un algorithme de classification pour pallier l'incomplétude du référ
 - Un peu meilleur sur les produits de grande consommation
     + Prédictions correctes ≈ 98 % du CA ✅
 
+## Améliorations à venir
+
+- Améliorations méthodologiques pour la pertinence du modèle
+
+. . .
+
+- Améliorations techniques possibles grâce à l'arrivée d'un sspcloud interne:
+    + MLFlow ;
+    + APIfication du modèle avec `FastAPI` ;
+    + Modèles plus complexes grâce à de la _GPU_ ?
 
 # Appariements à des données de caisse
 
