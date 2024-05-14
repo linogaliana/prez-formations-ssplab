@@ -83,12 +83,17 @@ css: custom.css
 - Beaucoup de similarité avec données administratives:
     + Différence principale: la population cible n'est pas connue
 
+. . .
+
+- Besoin de technologies stockage & traitement adaptées
 
 ## Quelques exemples de _big data_ dans la stat publique
 
 - [Système national des données de santé (SNDS)](https://www.snds.gouv.fr/SNDS/Accueil) ;
 - [Déclaration sociale nominative (DSN)](https://entreprendre.service-public.fr/vosdroits/F34059#:~:text=De%20quoi%20s%27agit%2Dil,partir%20du%20logiciel%20de%20paie.) ;
 - [SIVIC](https://esante.gouv.fr/SI-VIC) et [SIDEP](https://www.cnil.fr/fr/cnil-direct/question/passe-sanitaire-sidep-cest-quoi)
+- Données de transactions bancaires du [GIE CB](https://www.cartes-bancaires.com/cb/groupement/) ;
+- [Données de téléphonie mobile](https://www.insee.fr/fr/statistiques/4925200) ;
 - [Données de caisse](https://www.insee.fr/fr/metadonnees/definition/c2159)
 - ...
 
@@ -236,9 +241,7 @@ Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/
 :::
 
 
-# Sources
-
-## Données de scanner ([`Relevanc`](https://www.groupe-casino.fr/en/group/activities/e-commerce-new-business-activities/relevanc/) données) {.smaller}
+## Sources: données de caisse ([`Relevanc`](https://www.groupe-casino.fr/en/group/activities/e-commerce-new-business-activities/relevanc/) données) {.smaller}
 
 - [__Groupe Casino__]{.orange} (>10% du marché français):
     - Environ [11 000]{.orange} supermarchés ;
@@ -255,7 +258,7 @@ Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/
 
 :::
 
-## Données nutritionnelles crowdsourcées ([`Open Food Facts`](https://fr.openfoodfacts.org/)) 
+## Sources: données nutritionnelles crowdsourcées ([`Open Food Facts`](https://fr.openfoodfacts.org/)) 
 
 - Environ [2 millions de produits]{.orange} (mise à jour continue)
 
@@ -294,7 +297,7 @@ Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/
 :::
 
 
-# L'enjeu de l'appariement flou
+## L'enjeu de l'appariement flou
 
 - Problème des appariements flous par distance textuelle: les synonymes
     - Beaucoup d'alcools (Ricard & Pastis...)
@@ -305,7 +308,7 @@ Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/
 ![Siamese Neural Network](img/siamese_animal.png)
 
 
-# Deux approches complémentaires pour les appariements flous
+## Deux approches complémentaires pour les appariements flous
 
 - Construction d'un algorithme d'appariement en 5 étapes :
     - Du plus fiable (appariement EAN) au moins fiable (appariement flou sur des catégories génériques depuis base CIQUAL)
@@ -313,9 +316,111 @@ Plus de détails dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/
 
 ![](img/header_relevanc.png)
 
-# Résultats sur les enrichissements
+## Résultats sur les enrichissements
 
 - Environ 90% des magasins géolocalisés et identifiés par SIRET
 - Environ 98% des produits enrichis avec des caractéristiques grâce à OpenFoodFacts ou CIQUAL
     - Près de la moitié par appariements flous
 - Plus d'infos sur l'enrichissement des produits dans [Galiana & Suarez-Castillo (2022)](https://dl.acm.org/doi/abs/10.1145/3524458.3547244)
+
+# RESIL: appariement dans un répertoire d'individus
+
+## Au commencement était le [NIR](https://www.cnil.fr/fr/definition/nir-numero-dinscription-au-repertoire)
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+::: {.incremental}
+- Numéro de sécurité sociale (NIR): identifiant individuel unique
+    + Ouvre droits aux prestations sociales
+
+- Idéal pour des appariements entre bases de données
+
+- Problème: nombreuses informations identifiantes
+:::
+
+:::
+
+::: {.column width="40%"}
+![](https://www.ameli.fr/sites/default/files/styles/webp_ckeditor/public/thumbnails/image/infographie_assures-regle-identification-assures.gif.webp?itok=j2owVDrB)
+:::
+
+::::
+
+
+## Le [Code statistique non signifiant (CSNS)](https://www.insee.fr/fr/information/7635825?sommaire=7635842)
+
+- Faciliter les appariements de fichiers à des fins statistiques tout en limitant l'usage du NIR
+
+. . .
+
+- Chiffrement irréversible du NIR
+    - Reste unique mais devient anonyme
+
+. . .
+
+- Utilisé par l'Insee et les services statistiques ministériels pour divers fichiers administratifs et enquêtes.
+
+## Le [Code statistique non signifiant (CSNS)](https://www.insee.fr/fr/information/7635825?sommaire=7635842)
+
+- Service d'identification basé sur de la recherche floue
+dans le [RNIPP](https://www.insee.fr/fr/information/6665188?sommaire=6665196)
+    + Environ 113 millions de personnes ;
+
+. . .
+
+- Recherche à partir des traits d'identités (nom, prénom, date de naissance, etc.) ; 
+
+. . .
+
+- `ElasticSearch` pour recherche textuelle efficace ;
+
+
+## Le projet [RESIL](https://www.insee.fr/fr/information/7748883) {.smaller}
+
+- Souvent des informations supplémentaires aux traits d'identités pour trouver un individu dans une base
+    - Par exemple, on sait où il vit
+
+. . .
+
+> « [Résil] a pour finalité, en vue de contribuer au débat public ainsi qu’à l’élaboration et à l’évaluation des politiques publiques, de renforcer la capacité de l’Insee et des services statistiques ministériels à produire des données et études statistiques, en permettant l’établissement d’un répertoire national de la population et des logements et en [facilitant les appariements]{.underline .orange} de données administratives avec d’autres sources de données. »
+> 
+> Source : Article 1 du décret Résil publié au JO du 7 janvier 2024
+
+. . .
+
+- Rechercher un individu dans un répertoire (plus riche que RNIPP) de manière floue
+
+## CSNS et RESIL, en pratique
+
+- Comme le CSNS, RESIL utilise `Elasticsearch` pour la recherche textuelle efficace
+
+. . .
+
+- En amont de RESIL, une couche de géolocalisation basée sur un référentiel de lieux géographiques (projet _GAIA_)
+    + Egalement du `Elasticsearch`
+
+. . .
+
+- Référentiels vivants, mis à jour plus ou moins en continus:
+    + RNIPP: mise à jour quotidienne
+    + RESIL: mise à jour annuelle
+
+
+## Conclusion {.smaller}
+
+- Applications des enjeux du _big data_ à la statistique publique:
+    + Défi (Dis)continuité de l'information ;
+    + Transformation d'une base de gestion en base statistique ;
+    + _Challenge_ de la volumétrie
+
+. . .
+
+- Complément intéressant aux données administratives et d'enquêtes
+
+. . .
+
+- Exploitation nécessite l'usage de technologies adaptées:
+    + Infrastructure type sspcloud est idéale: stockage objet (`S3`), outils adaptés (`Elastic`, `Spark`, `Trino`, etc.) interfacés avec `Python`
+    + Accélère l'évolution du métier de statisticien vers _data scientist_ et _data engineer_

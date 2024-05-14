@@ -1,0 +1,24 @@
+image: inseefrlab/onyxia-r-datascience:r4.3.2
+
+stages:
+  - build
+  - deploy
+
+render:
+  stage: build
+  script: 
+    - quarto render
+  artifacts:
+    paths:
+    - _site/
+
+pages:
+  stage: deploy
+  dependencies:
+    - render
+  script: 
+    - mkdir -p public
+    - mv _site/* public/
+  artifacts:
+    paths:
+      - public/
