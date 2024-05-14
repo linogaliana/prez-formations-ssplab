@@ -85,7 +85,7 @@ css: custom.css
 
 . . .
 
-- Besoin de technologies stockage & traitement adaptées
+- Besoin de technologies adaptées pour stockage & traitement 
 
 ## Quelques exemples de _big data_ dans la stat publique
 
